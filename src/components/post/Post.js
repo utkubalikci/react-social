@@ -17,12 +17,13 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CommentIcon from '@mui/icons-material/Comment';
+import { Link } from "react-router-dom";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return <IconButton {...other} />;
 })(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+  transform: !expand ? 'rotate(0deg)' : 'rotate(30deg)',
   marginLeft: 'auto',
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
@@ -30,23 +31,31 @@ const ExpandMore = styled((props) => {
 }));
 
 
+
 function Post(props){
-    const {title,text} = props;
+    const {id,userId,userName,title,text} = props;
 
     const [expanded, setExpanded] = React.useState(false);
+    const [liked, setLiked] = React.useState(false)
 
     const handleExpandClick = () => {
       setExpanded(!expanded);
     };
 
+    const handleLike = () => {
+        setLiked(!liked);
+    }
+
     return(
         <div className="postContainer">
-            <Card sx={{ maxWidth: 1200 }}>
+            <Card sx={{ maxWidth: 1200, margin: 2}}>
                 <CardHeader
                     avatar={
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                        Utku
-                    </Avatar>
+                    <Link  style={{textDecoration: "none", color: "white"}} to={{pathname : '/users/' + userId}}>
+                        <Avatar sx={{ background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)' }} aria-label="recipe">
+                            {userName.charAt(0).toUpperCase()}
+                        </Avatar>
+                    </Link>
                     }
                     action={
                     <IconButton aria-label="settings">
@@ -54,6 +63,7 @@ function Post(props){
                     </IconButton>
                     }
                     title={title}
+                    subheader={userName}
                 />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">
@@ -61,8 +71,10 @@ function Post(props){
                     </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
+                    <IconButton 
+                    onClick={handleLike}
+                    aria-label="add to favorites">
+                        <FavoriteIcon style={liked? {color:"red"} : {color:"black"}}/>
                     </IconButton>
                     
                     <ExpandMore
